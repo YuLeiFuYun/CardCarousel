@@ -40,11 +40,11 @@
 
 ## Installation
 
-#### Swift Package Manager
+### Swift Package Manager
 
 In Xcode, select `File` > `Add Package Dependencies...`, paste `https://github.com/YuLeiFuYun/CardCarousel.git`
 
-#### CocoaPods
+### CocoaPods
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
@@ -67,7 +67,7 @@ end
 
 ## Usage
 
-#### In UIKit
+### In UIKit
 
 - Simple use:
 
@@ -194,7 +194,7 @@ CardCarousel(dataPublisher: $data) { index, itemIdentifier in
 
 
 
-#### In SwiftUI
+### In SwiftUI
 
 ```swift
 struct Content: View {
@@ -242,7 +242,7 @@ struct Content: View {
 
 
 
-#### 咒语
+### 咒语
 
 **高级动物**及**催妆曲**风格的咒语请以**全角逗号**分隔函数名、参数名与参数。多条咒语（即多个函数调用）以空格分割。
 
@@ -295,7 +295,7 @@ CardCarousel(data: data)
 
 
 
-#### All Method
+### All Method
 
 ```swift
 public protocol CardCarouselInterface {
