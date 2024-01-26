@@ -22,8 +22,7 @@ DerivedData/
 ## Other
 *.moved-aside
 *.xcuserstate
-.swiftpm/config/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm
 
 ## Obj-C/Swift specific
 *.hmap
