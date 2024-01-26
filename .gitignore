@@ -22,6 +22,7 @@ DerivedData/
 ## Other
 *.moved-aside
 *.xcuserstate
+.swiftpm
 
 ## Obj-C/Swift specific
 *.hmap
