@@ -89,7 +89,7 @@ cardCarousel.data = Array of web picture URLs as strings, or an array of UIImage
 - Custom cell:
 
 ```swift
-CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: TestItem) in
+CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: Item) in
     cell.imageView.kf.setImage(with: url)
     cell.indexLabel.backgroundColor = itemIdentifier.color
     cell.indexLabel.text = itemIdentifier.index
@@ -123,14 +123,7 @@ CardCarousel(data: data) { index, itemIdentifier in
     }
 }
 .scrollDirection(.topToBottom)
-.move(to: view, layoutConstraints: { cardCarouselView, superView in
-    NSLayoutConstraint.activate([
-        cardCarouselView.leadingAnchor.constraint(equalTo: superView.leadingAnchor, constant: 10),
-        cardCarouselView.trailingAnchor.constraint(equalTo: superView.trailingAnchor, constant: -10),
-        cardCarouselView.topAnchor.constraint(equalTo: superView.topAnchor, constant: 100),
-        cardCarouselView.heightAnchor.constraint(equalToConstant: 40)
-    ])
-})
+.move(to: view)
 ```
 
 ![道与碳基猴子饲养守则](./Assets/道与碳基猴子饲养守则.gif)
@@ -160,7 +153,7 @@ extension UIPageControl: CardCarouselNormalPageControlType { }
 Example:
 
 ```swift
-extension CHIPageControlAleppo: CardCarouselContinousPageControlType {
+extension CustomPageControl: CardCarouselContinousPageControlType {
     ...
 }
 
@@ -174,21 +167,14 @@ CardCarousel(dataPublisher: $data) { index, itemIdentifier in
 .minimumLineSpacing(20)
 .scrollStopAlignment(.head(offset: 10))
 .pageControl(makePageControl: {
-    let pageControl = CHIPageControlAleppo()
+    let pageControl = CustomPageControl()
     pageControl.currentPageTintColor = .white
     pageControl.tintColor = .green
     pageControl.radius = 4
     pageControl.padding = 15
     return pageControl
 }, position: .centerXBottom(offset: CGPoint(x: 0, y: -10)))
-.move(to: view) { cardCarouselView, superView in
-    NSLayoutConstraint.activate([
-        cardCarouselView.leadingAnchor.constraint(equalTo: superView.leadingAnchor),
-        cardCarouselView.trailingAnchor.constraint(equalTo: superView.trailingAnchor),
-        cardCarouselView.topAnchor.constraint(equalTo: superView.topAnchor, constant: 100),
-        cardCarouselView.heightAnchor.constraint(equalToConstant: 200)
-    ])
-}
+.move(to: view)
 ```
 
 ![The_Stormlight_Archive](./Assets/The_Stormlight_Archive.gif)
