@@ -1,7 +1,7 @@
 ## CardCarousel
 
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange?logo=Swift&logoColor=white&style=for-the-badge)](https://developer.apple.com/swift/)
-[![Platform](https://img.shields.io/badge/platform-iOS%2011%2B-%238D6748.svg?style=for-the-badge)](https://www.apple.com/nl/ios/)
+[![Platform](https://img.shields.io/badge/platform-iOS%2012%2B-%238D6748.svg?style=for-the-badge)](https://www.apple.com/nl/ios/)
 [![Release](https://img.shields.io/cocoapods/v/CardCarousel.svg?style=for-the-badge)](https://cocoapods.org/?q=CardCarousel)
 [![SPM](https://img.shields.io/badge/SPM-✔-4BC51D.svg?style=for-the-badge)](https://swift.org/package-manager)
 [![License](https://img.shields.io/badge/license-mit-%23d9ead3.svg?style=for-the-badge)](./LICENSE)
@@ -48,11 +48,11 @@ In Xcode, select `File` > `Add Package Dependencies...`, paste `https://github.c
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '11.0'
+platform :ios, '12.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'CardCarousel'
+    pod 'CardCarousel', '~> 1.0'
 end
 ```
 
@@ -60,7 +60,8 @@ end
 
 ## Requirements
 
-- iOS 11+
+- iOS 12+
+- Swift 5.9+
 - Xcode 15+
 
 
@@ -516,4 +517,5 @@ public protocol CardCarouselInterface {
 
 ## License
 
-`CardCarousel` is released under the MIT license. See LICENSE for details.
+`CardCarousel` is released under the MIT license. See [LICENSE](./LICENSE) for details.
+
