@@ -7,7 +7,7 @@
 
 import UIKit
 
-public final class ImageCard: UICollectionViewCell {
+final class ImageCard: UICollectionViewCell {
     var imageView: UIImageView!
     
     override init(frame: CGRect) {
