@@ -6,6 +6,10 @@
 [![SPM](https://img.shields.io/badge/SPM-✔-4BC51D.svg?style=for-the-badge)](https://swift.org/package-manager)
 [![License](https://img.shields.io/badge/license-mit-%23d9ead3.svg?style=for-the-badge)](./LICENSE)
 
+English | [简体中文](./README_CN.md)
+
+
+
 `CardCarousel` is a powerful yet easy-to-use carousel component that you can even configure with spells.
 
 
@@ -42,7 +46,7 @@
 
 ### Swift Package Manager
 
-In Xcode, select `File` > `Add Package Dependencies...`, paste `https://github.com/YuLeiFuYun/CardCarousel.git`
+In Xcode, select `File` > `Add Package Dependencies...` , paste `https://github.com/YuLeiFuYun/CardCarousel.git` .
 
 ### CocoaPods
 
@@ -70,7 +74,7 @@ end
 
 ### In UIKit
 
-- Simple use:
+- Simple use
 
 ```swift
 import CardCarousel
@@ -86,7 +90,7 @@ cardCarousel.data = Array of web picture URLs as strings, or an array of UIImage
 
 
 
-- Custom cell:
+- Custom cell
 
 ```swift
 CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: Item) in
@@ -229,9 +233,9 @@ struct Content: View {
 
 
 
-### 咒语
+### Spell
 
-**高级动物**及**催妆曲**风格的咒语请以**全角逗号**分隔函数名、参数名与参数。多条咒语（即多个函数调用）以空格分割。
+For spells in the styles of `高级动物` and `催妆曲`, please separate function names, parameter names, and arguments with full-width commas. Separate multiple spells (i.e., multiple function calls) with spaces.
 
 - 动物协鸣
 
@@ -239,7 +243,7 @@ struct Content: View {
 CardCarousel(咒语: "汪咕呦汪叽嗡呜汪叽 喵呜 呜啾 嘎啾", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 
-// 效果等同于
+// The effect is equivalent to
 CardCarousel(frame: CGRect(x: 0, y: 100, width: 393, height: 200), data: data)
     .cardLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.7))
     .cardTransformMode(.liner)
@@ -251,7 +255,7 @@ CardCarousel(frame: CGRect(x: 0, y: 100, width: 393, height: 200), data: data)
 - 高级动物
 
 ```swift
-// 效果同上
+// Same effect as above
 CardCarousel(咒语: "矛盾，自私，好色，爱喜，无聊，善良，爱喜 贪婪，真诚 善变，暗淡 无奈，埋怨", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 ```
@@ -259,7 +263,7 @@ CardCarousel(咒语: "矛盾，自私，好色，爱喜，无聊，善良，爱�
 - 催妆曲
 
 ```swift
-// 效果同上
+// Same effect as above
 CardCarousel(咒语: "醒呀，画眉在杏枝上歌，画眉人不起是因何，黛棕，远峰尖滴着新黛，正好蘸来描画双蛾，黛棕 晨鸡声呖呖在相催，日神也捧着金镜 画眉在杏枝上歌，她对着如镜的池塘 远峰尖滴着新黛，春莺儿衔了额黄归", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 ```
@@ -271,7 +275,7 @@ let 白素贞 = view
 CardCarousel(咒语: "大威天龙", 施法材料: data)
     .法术目标(白素贞)
 
-// 效果等同于
+// he effect is equivalent to
 CardCarousel(data: data)
     .minimumLineSpacing(10)
     .pageControl(makePageControl: { UIPageControl() }, position: .centerXBottom)
@@ -286,7 +290,7 @@ CardCarousel(data: data)
 
 ```swift
 public protocol CardCarouselInterface {
-    /// 卡片布局尺寸，默认铺满 super view
+    /// Card layout size, filling the entirety of the super view by default.
     ///
     /// 动物协鸣：汪；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     /// widthDimension：咕；heightDimension：嗡
@@ -301,7 +305,7 @@ public protocol CardCarouselInterface {
     /// fractionalWidth：画眉人不起是因何；fractionalHeight：正好蘸来描画双蛾；absolute：春莺儿衔了额黄归；inset：起呀
     func cardLayoutSize(widthDimension: CardLayoutDimension, heightDimension: CardLayoutDimension) -> Self
     
-    /// 卡片最小间距，默认 0
+    /// Minimum card spacing, default 0.
     ///
     /// 动物协鸣：啾；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     ///
@@ -310,7 +314,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：从睡乡醒回；0-9：["黛", "墨", "碧", "朱", "紫", "黄", "蓝", "棕", "灰", "白"]
     func minimumLineSpacing(_ spacing: CGFloat) -> Self
     
-    /// 卡片变换模式，默认 .none
+    /// Card transform mode, default .none
     ///
     /// 动物协鸣：喵；liner：呜；coverflow：嗷
     ///
@@ -319,7 +323,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：晨鸡声呖呖在相催；liner：日神也捧着金镜；coverflow：等候你起来梳早妆
     func cardTransformMode(_ mode: CardTransformMode) -> Self
     
-    /// 默认当前卡片始终在最前面，调用此方法，当前卡片可能会被其他卡片遮挡。
+    /// By default, the current card always remains at the forefront. invoking this method may result in it being obscured by other cards.
     ///
     /// 动物协鸣：咩
     ///
@@ -328,7 +332,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：看呀
     func disableCurrentCardAlwaysOnTop() -> Self
     
-    /// 滑动方向两侧的边距，loopMode 非 circular 时才会生效。默认 0
+    /// The margin on both sides of the sliding direction takes effect only when loopMode is set to non-circular. The default value is 0.
     ///
     /// 动物协鸣：哞；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     ///
@@ -337,7 +341,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：霞织的五彩衣裳；0-9：["黛", "墨", "碧", "朱", "紫", "黄", "蓝", "棕", "灰", "白"]
     func sideMargin(_ margin: CGFloat) -> Self
     
-    /// 滑动停止时的卡片对齐方式，默认中心对齐
+    /// Card alignment when scroll stops, default center alignment.
     ///
     /// 动物协鸣：呱；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     /// center：咕；head：嗡
@@ -349,7 +353,7 @@ public protocol CardCarouselInterface {
     /// center：画眉在杏枝上歌；head：画眉人不起是因何
     func scrollStopAlignment(_ alignment: CardScrollStopAlignment) -> Self
     
-    /// 单卡片时的对齐方式，默认中心对齐
+    /// Alignment for single card, default center alignment.
     ///
     /// 动物协鸣：呦；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     /// center：咕；head：嗡
@@ -361,7 +365,7 @@ public protocol CardCarouselInterface {
     /// center：画眉在杏枝上歌；head：画眉人不起是因何
     func singleCardAlignment(_ alignment: CardScrollStopAlignment) -> Self
     
-    /// 滚动方向，默认 .leftToRight
+    /// scroll eirection, default .leftToRight.
     ///
     /// 动物协鸣：呜
     /// leftToRight：汪；rightToLeft：啾；topToBottom：喵；bottomToTop：咩
@@ -373,10 +377,10 @@ public protocol CardCarouselInterface {
     /// leftToRight：杨柳的丝发飘扬；rightToLeft：她对着如镜的池塘；topToBottom：百花是薰沐已毕；bottomToTop：她们身上喷出芬芳
     func scrollDirection(_ direction: CardScrollDirection) -> Self
     
-    /// 自动滚动时的滚动动画效果，默认 .system
+    /// Scrolling animation effect for automatic scrolling, default .system.
     func autoScrollAnimation(_ animationOptions: CardScrollAnimationOptions) -> Self
     
-    /// 自动滚动还是手动滚动，默认 .automatic(timeInterval: 3)
+    /// Automatic scrolling or manual scrolling, default .automatic(timeInterval: 3).
     ///
     /// 动物协鸣：嗡；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     /// automatic：咕；manual：嗡
@@ -390,7 +394,7 @@ public protocol CardCarouselInterface {
     /// 注意：用咒语调用时时间间隔只能设为整数！
     func scrollMode(_ mode: CardScrollMode) -> Self
     
-    /// 循环模式，默认 circular
+    /// loop mode, default .circular.
     ///
     /// 动物协鸣：嘎
     /// circular：汪；rollback：啾；single：喵
@@ -402,7 +406,7 @@ public protocol CardCarouselInterface {
     /// circular：趁草际珠垂；rollback：春莺儿衔了额黄归；single：赶快拿妆梳理好
     func loopMode(_ mode: CardLoopMode) -> Self
     
-    /// 卡片分页阈值，默认卡片宽度的一半
+    /// Card paging threshold, half the default card width.
     ///
     /// 动物协鸣：叽；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     /// fractional：咕；absolute：嗡
@@ -414,7 +418,7 @@ public protocol CardCarouselInterface {
     /// fractional：画眉在杏枝上歌；absolute：画眉人不起是因何
     func pagingThreshold(_ pagingThreshold: CardPagingThreshold) -> Self
     
-    /// 一个浮点值，用于确定用户抬起手指后的减速率，值越大抬起手之后滑得越远，loopMode 为 rollback 时设置无效，默认值为 0.9924
+    /// A floating-point value determines the deceleration rate after the user lifts their finger; the larger the value, the farther the slide after lifting the hand. This setting is ineffective when loopMode is set to rollback. The default value is 0.9924.
     ///
     /// 动物协鸣：吱；0-9：["汪", "啾", "喵", "咩", "哞", "呱", "嘎", "叽", "吱", "嘶"]
     ///
@@ -423,7 +427,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：杨柳的丝发飘扬；["黛", "墨", "碧", "朱", "紫", "黄", "蓝", "棕", "灰", "白"]
     func decelerationRate(_ value: CGFloat) -> Self
     
-    /// 禁止用户滑动
+    /// Disable user swipe.
     ///
     /// 动物协鸣：嘶
     ///
@@ -432,7 +436,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：她对着如镜的池塘
     func disableUserSwipe() -> Self
     
-    /// 使用默认 cell 加载网络图片时，默认启用下采样，调用此方法禁用下采样
+    /// When loading web images using the default cell, downsampling is enabled by default, call this method to disable downsampling.
     ///
     /// 动物协鸣：咕
     ///
@@ -441,10 +445,10 @@ public protocol CardCarouselInterface {
     /// 催妆曲：百花是薰沐已毕
     func disableDownsampling() -> Self
     
-    /// 设置 backgroundView
+    /// Setting backgroundView.
     func backgroundView(_ view: UIView) -> Self
     
-    /// 卡片圆角设置
+    /// Card rounded corner Settings.
     ///
     /// 动物协鸣：嗷，不支持 maskedCorners 设置
     ///
@@ -453,40 +457,40 @@ public protocol CardCarouselInterface {
     /// 催妆曲：她们身上喷出芬芳，不支持 maskedCorners 设置
     func cardCornerRadius(_ value: CGFloat, maskedCorners: CACornerMask) -> Self
     
-    /// 禁用反弹效果
+    /// Disable bounce effect.
     func disableBounce() -> Self
     
-    /// 设置边框宽度及颜色
+    /// Setting the card border width and color.
     func border(width: CGFloat, color: CGColor?) -> Self
     
-    /// 设置使用默认卡片时的占位图
+    /// Setting the placeholder image when using the default card.
     func placeholder(_ image: UIImage) -> Self
     
-    /// 阴影相关
+    /// Settings Pertaining to Shadow Configuration.
     func shadow(offset: CGSize, color: CGColor?, radius: CGFloat, opacity: Float, path: CGPath?) -> Self
     
-    /// 设置 page control
+    /// Setting page control.
     func pageControl(makePageControl: @escaping () -> CardCarouselPageControlType, position: PageControlPosition) -> Self
     
-    /// 卡片被点击时调用
+    /// Called when the card is clicked.
     func onCardSelected(_ handler: @escaping (_ index: Int) -> Void) -> Self
     
-    /// 卡片滚动时调用
+    /// Called when the card scrolls.
     func onScroll(_ handler: @escaping (_ offset: CGPoint, _ progress: CGFloat) -> Void) -> Self
     
-    /// 卡片切换时调用
+    /// Called when the card is switched.
     func onCardChanged(_ handler: @escaping (_ index: Int) -> Void) -> Self
     
-    /// 开始拖动卡片时调用
+    /// Called when the card will begin dragging.
     func onWillBeginDragging(_ handler: @escaping (_ index: Int) -> Void) -> Self
     
-    /// 结束拖动卡片时调用
+    /// Called when the card will end dragging.
     func onWillEndDragging(_ handler: @escaping (_ index: Int) -> Void) -> Self
     
-    /// 数据预取
+    /// Prefetch items.
     func onPrefetchItems(_ handler: @escaping (_ indexs: [IndexPath]) -> Void) -> Self
     
-    /// 取消预取
+    /// Cancel items.
     func onCancelPrefetchItems(_ handler: @escaping (_ indexs: [IndexPath]) -> Void) -> Self
 }
 ```
