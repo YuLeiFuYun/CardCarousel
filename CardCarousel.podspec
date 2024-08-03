@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = 'CardCarousel'
-    s.version      = '1.0.4'
+    s.version      = '2.0.0'
     s.summary      = 'The most user-friendly carousel library, supporting configuration through spells.'
 
     s.homepage     = 'https://github.com/YuLeiFuYun/CardCarousel'
