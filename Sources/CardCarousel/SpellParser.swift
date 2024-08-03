@@ -273,12 +273,6 @@ fileprivate extension String {
             }
             
             spellTarget.disableUserSwipe = true
-        } else if funcName == .disableDownsampling {
-            guard currentIndex >= endIndex else {
-                fatalError("disableDownsampling(\(String.disableDownsampling)): 多余的参数")
-            }
-            
-            spellTarget.disableDownsampling = true
         } else if funcName == .cardCornerRadius {
             if spellStyle != .动物协鸣, currentIndex < endIndex {
                 // 丢弃 word separator
@@ -492,7 +486,6 @@ fileprivate enum Func: CaseIterable {
     case pagingThreshold
     case decelerationRate
     case disableUserSwipe
-    case disableDownsampling
     case cardCornerRadius
     
     var value: String {
@@ -510,7 +503,6 @@ fileprivate enum Func: CaseIterable {
         case .pagingThreshold: .pagingThreshold
         case .decelerationRate: .decelerationRate
         case .disableUserSwipe: .disableUserSwipe
-        case .disableDownsampling: .disableDownsampling
         case .cardCornerRadius: .cardCornerRadius
         }
     }
@@ -794,14 +786,6 @@ fileprivate extension String {
         case .动物协鸣: "嘶"
         case .高级动物: "忍让"
         case .催妆曲: "她对着如镜的池塘"
-        }
-    }
-    
-    static var disableDownsampling: String {
-        switch spellStyle {
-        case .动物协鸣: "咕"
-        case .高级动物: "气愤"
-        case .催妆曲: "百花是薰沐已毕"
         }
     }
     

@@ -12,7 +12,7 @@ fileprivate enum State {
     case resumed
 }
 
-final class GCDTimer {
+public final class GCDTimer {
     private let timer: DispatchSourceTimer
     
     private var state: State = .suspended
@@ -25,14 +25,14 @@ final class GCDTimer {
     
     /// GCD 定时器
     /// - Parameters:
-    ///   - startImmediately: 是否立即开始，true 表示立即开始，false 表示 interval 时间后再开始，默认为 true
+    ///   - startImmediately: 是否立即开始，true 表示立即开始，false 表示 interval 时间后再开始，默认为 false
     ///   - interval: 任务执行间隔，默认为 1 秒
     ///   - leeway: 任务执行精度，DispatchTimeInterval 类型，默认为 .nanoseconds(0)
     ///   - times: 执行次数，0 表示无限重复，默认为 0
     ///   - queue: 任务所在的队列，默认为主队列
     ///   - handler: 所要执行的任务
-    init(
-        startImmediately: Bool = true,
+    public init(
+        startImmediately: Bool = false,
         interval: DispatchTimeInterval = .seconds(1),
         leeway: DispatchTimeInterval = .nanoseconds(0),
         times: Int = 0,
@@ -54,13 +54,13 @@ final class GCDTimer {
         }
     }
     
-    func resume() {
+    public func resume() {
         guard state == .suspended else { return }
         state = .resumed
         timer.resume()
     }
     
-    func suspend() {
+    public func suspend() {
         guard state == .resumed else { return }
         state = .suspended
         timer.suspend()

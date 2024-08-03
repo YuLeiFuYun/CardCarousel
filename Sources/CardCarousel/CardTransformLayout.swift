@@ -80,7 +80,7 @@ fileprivate extension CardTransformLayout {
         }
         
         let collectionViewSize = collectionView!.bounds.size
-        let distance = caculateDistance(with: attributes)
+        let distance = calculateDistance(with: attributes)
         var scale: CGFloat, alpha: CGFloat
         switch cardScrollDirection {
         case .rightToLeft, .leftToRight:
@@ -104,7 +104,7 @@ fileprivate extension CardTransformLayout {
         }
         
         let collectionViewSize = collectionView!.bounds.size
-        let distance = caculateDistance(with: attributes)
+        let distance = calculateDistance(with: attributes)
         var angle: CGFloat, alpha: CGFloat
         switch cardScrollDirection {
         case .rightToLeft, .leftToRight:
@@ -151,7 +151,7 @@ fileprivate extension CardTransformLayout {
 }
 
 fileprivate extension CardTransformLayout {
-    func caculateDistance(with attributes: UICollectionViewLayoutAttributes) -> CGFloat {
+    func calculateDistance(with attributes: UICollectionViewLayoutAttributes) -> CGFloat {
         let contentOffset = collectionView!.contentOffset
         let collectionViewSize = collectionView!.bounds.size
         var distance: CGFloat

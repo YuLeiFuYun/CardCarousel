@@ -19,44 +19,44 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
         cardCarouselView = CardCarouselUIKitView<ImageCard, CardCarouselDataRepresentable>(frame: frame)
     }
     
-    public init<Item>(frame: CGRect = .zero, data: [Item]) {
-        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: frame, data: data)
+    public init<Item>(frame: CGRect = .zero, items: [Item]) {
+        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: frame, items: items)
     }
     
     public init<Cell: UICollectionViewCell, Item>(
-        frame: CGRect = .zero, data: [Item] = [],
+        frame: CGRect = .zero, items: [Item] = [],
         cellRegistration: @escaping (_ cell: Cell, _ index: Int, _ itemIdentifier: Item) -> Void
     ) {
-        cardCarouselView = CardCarouselUIKitView(frame: frame, data: data, cellRegistration: cellRegistration)
+        cardCarouselView = CardCarouselUIKitView(frame: frame, items: items, cellRegistration: cellRegistration)
     }
     
     @available(iOS 13, *)
-    public init<Item>(frame: CGRect = .zero, dataPublisher: Published<[Item]>.Publisher) {
-        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: frame, dataPublisher: dataPublisher)
+    public init<Item>(frame: CGRect = .zero, itemsPublisher: Published<[Item]>.Publisher) {
+        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: frame, itemsPublisher: itemsPublisher)
     }
     
     @available(iOS 13, *)
     public init<Cell: UICollectionViewCell, Item>(
-        frame: CGRect = .zero, dataPublisher: Published<[Item]>.Publisher,
+        frame: CGRect = .zero, itemsPublisher: Published<[Item]>.Publisher,
         cellRegistration: @escaping (_ cell: Cell, _ index: Int, _ itemIdentifier: Item) -> Void
     ) {
-        cardCarouselView = CardCarouselUIKitView(frame: frame, dataPublisher: dataPublisher, cellRegistration: cellRegistration)
+        cardCarouselView = CardCarouselUIKitView(frame: frame, itemsPublisher: itemsPublisher, cellRegistration: cellRegistration)
     }
     
     @available(iOS 13, *)
     public init<Content: View, Item>(
-        frame: CGRect = .zero, data: [Item] = [],
+        frame: CGRect = .zero, items: [Item] = [],
         @ViewBuilder content: @escaping (_ index: Int, _ itemIdentifier: Item) -> Content
     ) {
-        cardCarouselView = CardCarouselSwiftUIView(frame: frame, data: data, content: content)
+        cardCarouselView = CardCarouselSwiftUIView(frame: frame, items: items, content: content)
     }
     
     @available(iOS 13, *)
     public init<Content: View, Item>(
-        frame: CGRect = .zero, dataPublisher: Published<[Item]>.Publisher,
+        frame: CGRect = .zero, itemsPublisher: Published<[Item]>.Publisher,
         @ViewBuilder content: @escaping (_ index: Int, _ itemIdentifier: Item) -> Content
     ) {
-        cardCarouselView = CardCarouselSwiftUIView(frame: frame, dataPublisher: dataPublisher, content: content)
+        cardCarouselView = CardCarouselSwiftUIView(frame: frame, itemsPublisher: itemsPublisher, content: content)
     }
     
     public init(咒语: String, 作用域: CGRect = .zero) {
@@ -65,7 +65,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
     }
     
     public init<Item>(咒语: String, 施法材料: [Item], 作用域: CGRect = .zero) {
-        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: 作用域, data: 施法材料)
+        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: 作用域, items: 施法材料)
         咒语.施于(cardCarouselView)
     }
     
@@ -73,13 +73,13 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
         咒语: String, 施法材料: [Item], 作用域: CGRect = .zero,
         升华构件: @escaping (_ cell: Cell, _ index: Int, _ itemIdentifier: Item) -> Void
     ) {
-        cardCarouselView = CardCarouselUIKitView(frame: 作用域, data: 施法材料, cellRegistration: 升华构件)
+        cardCarouselView = CardCarouselUIKitView(frame: 作用域, items: 施法材料, cellRegistration: 升华构件)
         咒语.施于(cardCarouselView)
     }
     
     @available(iOS 13, *)
     public init<Item>(咒语: String, 响应材料: Published<[Item]>.Publisher, 作用域: CGRect = .zero) {
-        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: 作用域, dataPublisher: 响应材料)
+        cardCarouselView = CardCarouselUIKitView<ImageCard, Item>(frame: 作用域, itemsPublisher: 响应材料)
         咒语.施于(cardCarouselView)
     }
     
@@ -88,7 +88,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
         咒语: String, 响应材料: Published<[Item]>.Publisher, 作用域: CGRect = .zero,
         升华构件: @escaping (_ cell: Cell, _ index: Int, _ itemIdentifier: Item) -> Void
     ) {
-        cardCarouselView = CardCarouselUIKitView(frame: 作用域, dataPublisher: 响应材料, cellRegistration: 升华构件)
+        cardCarouselView = CardCarouselUIKitView(frame: 作用域, itemsPublisher: 响应材料, cellRegistration: 升华构件)
         咒语.施于(cardCarouselView)
     }
     
@@ -97,7 +97,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
         咒语: String, 施法材料: [Item], 作用域: CGRect = .zero,
         @ViewBuilder 升华构件: @escaping (_ index: Int, _ itemIdentifier: Item) -> Content
     ) {
-        cardCarouselView = CardCarouselSwiftUIView(frame: 作用域, data: 施法材料, content: 升华构件)
+        cardCarouselView = CardCarouselSwiftUIView(frame: 作用域, items: 施法材料, content: 升华构件)
         咒语.施于(cardCarouselView)
     }
     
@@ -106,7 +106,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
         咒语: String, 响应材料: Published<[Item]>.Publisher, 作用域: CGRect = .zero,
         @ViewBuilder 升华构件: @escaping (_ index: Int, _ itemIdentifier: Item) -> Content
     ) {
-        cardCarouselView = CardCarouselSwiftUIView(frame: 作用域, dataPublisher: 响应材料, content: 升华构件)
+        cardCarouselView = CardCarouselSwiftUIView(frame: 作用域, itemsPublisher: 响应材料, content: 升华构件)
         咒语.施于(cardCarouselView)
     }
     
@@ -114,7 +114,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
     
     /// 将自身添加到 super view，未设置 frame 时会铺满 super view
     @discardableResult
-    public func move(to superView: UIView) -> CardCarouselBaseView {
+    public func add(to superView: UIView) -> CardCarouselBaseView {
         superView.addSubview(cardCarouselView)
         
         if cardCarouselView.frame == .zero {
@@ -132,7 +132,7 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
     
     /// 将自身添加到 super view，同时设置其自动布局约束
     @discardableResult
-    public func move(
+    public func add(
         to superView: UIView,
         layoutConstraints: (_ cardCarouselView: UIView, _ superView: UIView) -> Void
     ) -> CardCarouselBaseView {
@@ -147,13 +147,13 @@ public class CardCarousel: CardCarouselInterface, CardCarouselInternalType {
     /// 将自身添加到 super view，未设置 frame 时会铺满 super view
     @discardableResult
     public func 法术目标(_ 目标: UIView) -> CardCarouselBaseView {
-        move(to: 目标)
+        add(to: 目标)
     }
     
     /// 将自身添加到 super view，同时设置其自动布局约束
     @discardableResult
     public func 法术目标(_ 目标: UIView, 作用域: (_ cardCarouselView: UIView, _ superView: UIView) -> Void) -> CardCarouselBaseView {
-        move(to: 目标, layoutConstraints: 作用域)
+        add(to: 目标, layoutConstraints: 作用域)
     }
 }
 

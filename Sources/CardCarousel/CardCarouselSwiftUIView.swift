@@ -17,22 +17,22 @@ final class CardCarouselSwiftUIView<Content: View, Item>: CardCarouselCore<Item>
     
     private var subscriptions = Set<AnyCancellable>()
     
-    init(frame: CGRect = .zero, data: [Item] = [], @ViewBuilder content: @escaping Handler) {
+    init(frame: CGRect = .zero, items: [Item] = [], @ViewBuilder content: @escaping Handler) {
         self.content = content
         super.init(frame: frame)
         
-        self.data = data
+        self.items = items
         collectionView.register(HostingCell<Content>.self, forCellWithReuseIdentifier: HostingCell<Content>.reuseIdentifier)
     }
     
-    init(frame: CGRect = .zero, dataPublisher: Published<[Item]>.Publisher, @ViewBuilder content: @escaping Handler) {
+    init(frame: CGRect = .zero, itemsPublisher: Published<[Item]>.Publisher, @ViewBuilder content: @escaping Handler) {
         self.content = content
         super.init(frame: frame)
         
         collectionView.register(HostingCell<Content>.self, forCellWithReuseIdentifier: HostingCell<Content>.reuseIdentifier)
-        dataPublisher
-            .sink { [weak self] data in
-                self?.data = data
+        itemsPublisher
+            .sink { [weak self] items in
+                self?.items = items
             }
             .store(in: &subscriptions)
     }
@@ -44,8 +44,8 @@ final class CardCarouselSwiftUIView<Content: View, Item>: CardCarouselCore<Item>
     // MARK: - 重写
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let index = indexPath.row % data.count
-        let item = data[index]
+        let index = indexPath.row % items.count
+        let item = items[index]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HostingCell<Content>.reuseIdentifier, for: indexPath) as! HostingCell<Content>
         cell.embed(in: parentViewController()!, withView: content(index, item))
         cell.host?.view.frame = cell.contentView.bounds

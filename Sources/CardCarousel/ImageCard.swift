@@ -10,6 +10,8 @@ import UIKit
 final class ImageCard: UICollectionViewCell {
     var imageView: UIImageView!
     
+    let id = UUID()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -26,7 +28,6 @@ final class ImageCard: UICollectionViewCell {
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        
         imageView.image = nil
     }
 }

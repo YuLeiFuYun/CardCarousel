@@ -154,15 +154,6 @@ public protocol CardCarouselInterface {
     /// 催妆曲：她对着如镜的池塘
     func disableUserSwipe() -> Self
     
-    /// 使用默认 cell 加载网络图片时，默认启用下采样，调用此方法禁用下采样
-    ///
-    /// 动物协鸣：咕
-    ///
-    /// 高级动物：气愤
-    ///
-    /// 催妆曲：百花是薰沐已毕
-    func disableDownsampling() -> Self
-    
     /// 设置 backgroundView
     func backgroundView(_ view: UIView) -> Self
     
@@ -327,14 +318,6 @@ public extension CardCarouselInterface {
     func disableUserSwipe() -> Self {
         if let cardCarousel = self as? CardCarouselInternalType {
             cardCarousel.cardCarouselView.disableUserSwipe = true
-        }
-        
-        return self
-    }
-    
-    func disableDownsampling() -> Self {
-        if let cardCarousel = self as? CardCarouselInternalType {
-            cardCarousel.cardCarouselView.disableDownsampling = true
         }
         
         return self

@@ -69,13 +69,11 @@ public class CardCarouselBaseView: UIView {
             collectionView.bounces = !disableBounce
         }
     }
-    /// 使用默认 cell 加载网络图片时，是否禁用下采样
-    var disableDownsampling = false
     /// 卡片布局尺寸
     var cardLayoutSize: CardLayoutSize = .init() {
         didSet {
             guard collectionView.frame != .zero else { return }
-            cardSize = cardLayoutSize.actualValue(withContainerSize: collectionView.frame.size)
+            cardSize = cardLayoutSize.actualValue(withContainerSize: collectionView.bounds.size)
         }
     }
     /// 单卡片时的对齐方式
@@ -117,7 +115,7 @@ public class CardCarouselBaseView: UIView {
     /// 循环模式
     var loopMode: CardLoopMode = .circular {
         didSet {
-            updateUIForStateChanged()
+            updateUIOnLayoutChange()
         }
     }
     /// 卡片分页阈值
@@ -199,14 +197,14 @@ public class CardCarouselBaseView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
-        updateUIForStateChanged()
+        updateUIOnLayoutChange()
     }
     
     func makeTimer(interval: TimeInterval) -> GCDTimer? {
         fatalError()
     }
     
-    func updateUIForStateChanged() {
+    func updateUIOnLayoutChange() {
         fatalError()
     }
     
@@ -220,9 +218,9 @@ public class CardCarouselBaseView: UIView {
         set {
             if let view = self as? CardCarouselCore<CardCarouselDataRepresentable> {
                 if Item.self == String.self {
-                    view.data = newValue as! [String]
-                } else if Item.self == UIImage.self {
-                    view.data = newValue as! [UIImage]
+                    view.items = newValue as! [String]
+                } else if Item.self == UIImage?.self {
+                    view.items = newValue as! [UIImage]
                 }
             } else if var view = self as? CardCarouselCore<Item> {
                 view[keyPath: keyPath] = newValue
