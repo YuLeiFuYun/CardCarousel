@@ -56,7 +56,7 @@ platform :ios, '12.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'CardCarousel', '~> 1.0'
+    pod 'CardCarousel', '~> 2.0'
 end
 ```
 
@@ -79,10 +79,31 @@ end
 ```swift
 import CardCarousel
 
-let cardCarousel = CardCarousel(frame: ...).move(to: view)
+let cardCarousel = CardCarousel(frame: ...).add(to: view)
 
-// After fetching data
-cardCarousel.data = Array of web picture URLs as strings, or an array of UIImages.
+// For local images, you can directly assign an array of UIImage objects.
+cardCarousel.items = [UIImage]
+
+// Before using remote images in CardCarousel, set up the ImageLoadingManager with appropriate loading, prefetching, and cancellation behaviors. This is typically done using a third-party library like SDWebImage or Kingfisher.
+// Here’s an example of how you might configure the ImageLoadingManager:
+import Kingfisher
+
+ImageLoadingManager.shared.configure { url, imageView, placeholder, completion in
+    imageView.kf.setImage(with: url, placeholder: placeholder) { _ in
+        completion()
+    }
+} prefetch: { urls in
+    ImagePrefetcher(urls: urls).start()
+} cancel: { urls in
+    ImagePrefetcher(urls: urls).stop()
+}
+
+// After configuring ImageLoadingManager, you can set the items of CardCarousel to be an array of URL strings:
+cardCarousel.items = [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg",
+    "https://example.com/image3.jpg"
+]
 ```
 
 
@@ -93,7 +114,7 @@ cardCarousel.data = Array of web picture URLs as strings, or an array of UIImage
 - Custom cell
 
 ```swift
-CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: Item) in
+CardCarousel(items: items) { (cell: CustomCell, index: Int, itemIdentifier: Item) in
     cell.imageView.kf.setImage(with: url)
     cell.indexLabel.backgroundColor = itemIdentifier.color
     cell.indexLabel.text = itemIdentifier.index
@@ -101,7 +122,7 @@ CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: Item) 
 .cardLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.7))
 .cardTransformMode(.liner(minimumAlpha: 0.3))
 .cardCornerRadius(10)
-.move(to: view, layoutConstraints: { cardCarouselView, superView in
+.add(to: view, layoutConstraints: { cardCarouselView, superView in
     NSLayoutConstraint.activate([
         cardCarouselView.leadingAnchor.constraint(equalTo: superView.leadingAnchor),
         cardCarouselView.trailingAnchor.constraint(equalTo: superView.trailingAnchor),
@@ -119,7 +140,7 @@ CardCarousel(data: data) { (cell: CustomCell, index: Int, itemIdentifier: Item) 
 - SwiftUI View
 
 ```swift
-CardCarousel(data: data) { index, itemIdentifier in
+CardCarousel(items: items) { index, itemIdentifier in
     HStack {
         Text(itemIdentifier)
             .font(.system(size: 18))
@@ -127,7 +148,7 @@ CardCarousel(data: data) { index, itemIdentifier in
     }
 }
 .scrollDirection(.topToBottom)
-.move(to: view)
+.add(to: view)
 ```
 
 ![道与碳基猴子饲养守则](./Assets/道与碳基猴子饲养守则.gif)
@@ -161,7 +182,7 @@ extension CustomPageControl: CardCarouselContinousPageControlType {
     ...
 }
 
-CardCarousel(dataPublisher: $data) { index, itemIdentifier in
+CardCarousel(itemsPublisher: $items) { index, itemIdentifier in
     Text(itemIdentifier.text)
         .font(.title)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -178,7 +199,7 @@ CardCarousel(dataPublisher: $data) { index, itemIdentifier in
     pageControl.padding = 15
     return pageControl
 }, position: .centerXBottom(offset: CGPoint(x: 0, y: -10)))
-.move(to: view)
+.add(to: view)
 ```
 
 ![The_Stormlight_Archive](./Assets/The_Stormlight_Archive.gif)
@@ -189,7 +210,7 @@ CardCarousel(dataPublisher: $data) { index, itemIdentifier in
 
 ```swift
 struct Content: View {
-    @State var data = [
+    @State var items = [
         "飞光飞光 劝尔一杯酒",
         "吾不识青天高 黄地厚",
         "惟见月寒日暖 来煎人寿",
@@ -198,7 +219,7 @@ struct Content: View {
     
     
     var body: some View {
-        CardCarouselView($data, content: { index, itemIdentifier in
+        CardCarouselView($items, content: { index, itemIdentifier in
             if index.isMultiple(of: 2) {
                 ZStack {
                     Color.blue
@@ -240,23 +261,23 @@ For spells in the styles of `高级动物` and `催妆曲`, please separate func
 - 动物协鸣
 
 ```swift
-CardCarousel(咒语: "汪咕呦汪叽嗡呜汪叽 喵呜 呜啾 嘎啾", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
+CardCarousel(咒语: "汪咕呦汪叽嗡呜汪叽 喵呜 呜啾 嘎啾", 施法材料: items, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 
 // The effect is equivalent to
-CardCarousel(frame: CGRect(x: 0, y: 100, width: 393, height: 200), data: data)
+CardCarousel(frame: CGRect(x: 0, y: 100, width: 393, height: 200), items: items)
     .cardLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(0.7))
     .cardTransformMode(.liner)
     .scrollDirection(.rightToLeft)
     .loopMode(.rollback)
-    .move(to: view)
+    .add(to: view)
 ```
 
 - 高级动物
 
 ```swift
 // Same effect as above
-CardCarousel(咒语: "矛盾，自私，好色，爱喜，无聊，善良，爱喜 贪婪，真诚 善变，暗淡 无奈，埋怨", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
+CardCarousel(咒语: "矛盾，自私，好色，爱喜，无聊，善良，爱喜 贪婪，真诚 善变，暗淡 无奈，埋怨", 施法材料: items, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 ```
 
@@ -264,7 +285,7 @@ CardCarousel(咒语: "矛盾，自私，好色，爱喜，无聊，善良，爱�
 
 ```swift
 // Same effect as above
-CardCarousel(咒语: "醒呀，画眉在杏枝上歌，画眉人不起是因何，黛棕，远峰尖滴着新黛，正好蘸来描画双蛾，黛棕 晨鸡声呖呖在相催，日神也捧着金镜 画眉在杏枝上歌，她对着如镜的池塘 远峰尖滴着新黛，春莺儿衔了额黄归", 施法材料: data, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
+CardCarousel(咒语: "醒呀，画眉在杏枝上歌，画眉人不起是因何，黛棕，远峰尖滴着新黛，正好蘸来描画双蛾，黛棕 晨鸡声呖呖在相催，日神也捧着金镜 画眉在杏枝上歌，她对着如镜的池塘 远峰尖滴着新黛，春莺儿衔了额黄归", 施法材料: items, 作用域: CGRect(x: 0, y: 100, width: 393, height: 200))
     .法术目标(view)
 ```
 
@@ -272,14 +293,14 @@ CardCarousel(咒语: "醒呀，画眉在杏枝上歌，画眉人不起是因何�
 
 ```swift
 let 白素贞 = view
-CardCarousel(咒语: "大威天龙", 施法材料: data)
+CardCarousel(咒语: "大威天龙", 施法材料: items)
     .法术目标(白素贞)
 
 // he effect is equivalent to
-CardCarousel(data: data)
+CardCarousel(items: items)
     .minimumLineSpacing(10)
     .pageControl(makePageControl: { UIPageControl() }, position: .centerXBottom)
-    .move(to: view)
+    .add(to: view)
 ```
 
 ![大威天龙](./Assets/大威天龙.gif)
@@ -314,7 +335,7 @@ public protocol CardCarouselInterface {
     /// 催妆曲：从睡乡醒回；0-9：["黛", "墨", "碧", "朱", "紫", "黄", "蓝", "棕", "灰", "白"]
     func minimumLineSpacing(_ spacing: CGFloat) -> Self
     
-    /// Card transform mode, default .none
+    /// Card transform mode, default .none.
     ///
     /// 动物协鸣：喵；liner：呜；coverflow：嗷
     ///
@@ -324,6 +345,8 @@ public protocol CardCarouselInterface {
     func cardTransformMode(_ mode: CardTransformMode) -> Self
     
     /// By default, the current card always remains at the forefront. invoking this method may result in it being obscured by other cards.
+    ///
+    /// 动物协鸣：咩
     ///
     /// 动物协鸣：咩
     ///
@@ -436,15 +459,6 @@ public protocol CardCarouselInterface {
     /// 催妆曲：她对着如镜的池塘
     func disableUserSwipe() -> Self
     
-    /// When loading web images using the default cell, downsampling is enabled by default, call this method to disable downsampling.
-    ///
-    /// 动物协鸣：咕
-    ///
-    /// 高级动物：气愤
-    ///
-    /// 催妆曲：百花是薰沐已毕
-    func disableDownsampling() -> Self
-    
     /// Setting backgroundView.
     func backgroundView(_ view: UIView) -> Self
     
@@ -501,7 +515,6 @@ public protocol CardCarouselInterface {
 
 - [TYCyclePagerView](https://github.com/12207480/TYCyclePagerView)
 - [scroll_animation](https://github.com/qyz777/scroll_animation)
-- [Asynchronous operations for writing concurrent solutions in Swift](https://www.avanderlee.com/swift/asynchronous-operations/)
 
 
 
