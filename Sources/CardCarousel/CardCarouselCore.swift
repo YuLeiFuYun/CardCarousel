@@ -293,48 +293,82 @@ private extension CardCarouselCore {
         default:
             switch scrollDirection {
             case .leftToRight, .rightToLeft:
-                var firstStride = sideMargin + cardSize.width * 1.5 + minimumLineSpacing - bounds.width / 2
-                if case let .center(offset) = cardScrollStopAlignment.options {
-                    firstStride -= offset
-                } else if case let .head(offset) = cardScrollStopAlignment.options {
-                    firstStride = sideMargin + cardSize.width + minimumLineSpacing - offset
-                }
+                progress = 0
                 stride = cardSize.width + minimumLineSpacing
-                if items.count == 2 {
-                    let lastPageOffset = 2 * sideMargin + stride * CGFloat(items.count) - minimumLineSpacing - bounds.width
-                    progress = contentOffset.x / lastPageOffset
-                } else {
-                    progress = contentOffset.x / firstStride
-                    if progress > 1 {
-                        progress = 1 + (contentOffset.x - firstStride) / stride
-                        if progress > CGFloat(items.count - 2) {
-                            let anchorOffset = firstStride + CGFloat(items.count - 3) * stride
-                            let offset = contentOffset.x - anchorOffset
-                            let total = 2 * sideMargin + stride * CGFloat(items.count) - minimumLineSpacing - bounds.width - anchorOffset
-                            progress = CGFloat(items.count - 2) + offset / total
+                if case let .center(offset) = cardScrollStopAlignment.options {
+                    let distance = contentOffset.x + bounds.width * 0.5 + offset
+                    progress = (distance - sideMargin - cardSize.width * 0.5) / stride
+                    let criticalValue = sideMargin + stride * CGFloat(items.count - 1) - stride * 0.5 - minimumLineSpacing
+                    if distance > criticalValue {
+                        if bounds.width * 0.5 - offset >= cardSize.width * 1.5 + minimumLineSpacing + sideMargin {
+                            progress = CGFloat(items.count - 1)
+                        } else {
+                            let lastStride = cardSize.width * 1.5 + minimumLineSpacing + sideMargin - bounds.width * 0.5 + offset
+                            progress = CGFloat(items.count - 2) + (contentOffset.x + bounds.width - criticalValue - bounds.width * 0.5 + offset) / lastStride
+                        }
+                    } else {
+                        let value = (bounds.width * 0.5 + offset - sideMargin - cardSize.width * 0.5) / stride
+                        stride = (ceil(value) - value) * stride
+                        if contentOffset.x < stride {
+                            progress = contentOffset.x / stride
+                        }
+                    }
+                } else if case let .head(offset) = cardScrollStopAlignment.options {
+                    let distance = contentOffset.x + offset
+                    progress = (distance - sideMargin) / stride
+                    let criticalValue = sideMargin + stride * CGFloat(items.count - 1)
+                    if distance > criticalValue {
+                        if bounds.width - offset >= cardSize.width + sideMargin {
+                            progress = CGFloat(items.count - 1)
+                        } else {
+                            let lastStride = cardSize.width + sideMargin - bounds.width + offset
+                            progress = CGFloat(items.count - 2) + (contentOffset.x - criticalValue + offset) / lastStride
+                        }
+                    } else {
+                        let value = (offset - sideMargin) / stride
+                        stride = (ceil(value) - value) * stride
+                        if contentOffset.x < stride {
+                            progress = contentOffset.x / stride
                         }
                     }
                 }
             case .topToBottom, .bottomToTop:
-                var firstStride = sideMargin + cardSize.height * 1.5 + minimumLineSpacing - bounds.height / 2
-                if case let .center(offset) = cardScrollStopAlignment.options {
-                    firstStride -= offset
-                } else if case let .head(offset) = cardScrollStopAlignment.options {
-                    firstStride = sideMargin + cardSize.height + minimumLineSpacing - offset
-                }
+                progress = 0
                 stride = cardSize.height + minimumLineSpacing
-                if items.count == 2 {
-                    let lastPageOffset = 2 * sideMargin + stride * CGFloat(items.count) - minimumLineSpacing - bounds.height
-                    progress = contentOffset.y / lastPageOffset
-                } else {
-                    progress = contentOffset.y / firstStride
-                    if progress > 1 {
-                        progress = 1 + (contentOffset.y - firstStride) / stride
-                        if progress > CGFloat(items.count - 2) {
-                            let anchorOffset = firstStride + CGFloat(items.count - 3) * stride
-                            let offset = contentOffset.y - anchorOffset
-                            let total = 2 * sideMargin + stride * CGFloat(items.count) - minimumLineSpacing - bounds.height - anchorOffset
-                            progress = CGFloat(items.count - 2) + offset / total
+                if case let .center(offset) = cardScrollStopAlignment.options {
+                    let distance = contentOffset.y + bounds.height * 0.5 + offset
+                    progress = (distance - sideMargin - cardSize.height * 0.5) / stride
+                    let criticalValue = sideMargin + stride * CGFloat(items.count - 1) - stride * 0.5 - minimumLineSpacing
+                    if distance > criticalValue {
+                        if bounds.height * 0.5 - offset >= cardSize.height * 1.5 + minimumLineSpacing + sideMargin {
+                            progress = CGFloat(items.count - 1)
+                        } else {
+                            let lastStride = cardSize.height * 1.5 + minimumLineSpacing + sideMargin - bounds.height * 0.5 + offset
+                            progress = CGFloat(items.count - 2) + (contentOffset.y + bounds.height - criticalValue - bounds.height * 0.5 + offset) / lastStride
+                        }
+                    } else {
+                        let value = (bounds.height * 0.5 + offset - sideMargin - cardSize.height * 0.5) / stride
+                        stride = (ceil(value) - value) * stride
+                        if contentOffset.y < stride {
+                            progress = contentOffset.y / stride
+                        }
+                    }
+                } else if case let .head(offset) = cardScrollStopAlignment.options {
+                    let distance = contentOffset.y + offset
+                    progress = (distance - sideMargin) / stride
+                    let criticalValue = sideMargin + stride * CGFloat(items.count - 1)
+                    if distance > criticalValue {
+                        if bounds.height - offset >= cardSize.height + sideMargin {
+                            progress = CGFloat(items.count - 1)
+                        } else {
+                            let lastStride = cardSize.height + sideMargin - bounds.height + offset
+                            progress = CGFloat(items.count - 2) + (contentOffset.y - criticalValue + offset) / lastStride
+                        }
+                    } else {
+                        let value = (offset - sideMargin) / stride
+                        stride = (ceil(value) - value) * stride
+                        if contentOffset.y < stride {
+                            progress = contentOffset.y / stride
                         }
                     }
                 }
