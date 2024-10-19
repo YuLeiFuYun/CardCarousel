@@ -5,222 +5,154 @@
 //  Created by 玉垒浮云 on 2024/1/18.
 //
 
-import UIKit
+extension CardCarousel {
+    /// 表示尺寸的结构体，支持基于百分比和绝对值的尺寸表示。
+    public struct Dimension {
+        /// 尺寸选项枚举，支持基于父视图宽度或高度的百分比尺寸（可选地包含填充）和绝对尺寸。
+        enum Option {
+            case fractionalWidth(CGFloat, padding: CGFloat)
+            case fractionalHeight(CGFloat, padding: CGFloat)
+            case absolute(CGFloat) // 绝对尺寸。
+        }
+        
+        var option: Option // 当前尺寸的选项。
+        
+        init(option: Option) {
+            self.option = option
+        }
+        
+        /// 创建一个基于父视图宽度的百分比尺寸，可选地包含 padding。
+        ///
+        /// - Parameters:
+        ///   - fractionalWidth: 父视图宽度的百分比。
+        ///   - padding: 表示在计算基于父视图宽度的百分比尺寸时，从父视图的左右两侧各留出的空间。
+        /// - Returns: 一个新的尺寸实例。
+        public static func fractionalWidth(_ fractionalWidth: CGFloat, padding: CGFloat = 0) -> Dimension {
+            Dimension(option: .fractionalWidth(fractionalWidth, padding: padding))
+        }
 
-public struct CardLayoutDimension {
-    enum Options {
-        case fractionalWidth(CGFloat, inset: CGFloat)
-        case fractionalHeight(CGFloat, inset: CGFloat)
+        /// 创建一个基于父视图高度的百分比尺寸，可选地包含 padding。
+        ///
+        /// - Parameters:
+        ///   - fractionalHeight: 父视图高度的百分比。
+        ///   - padding:表示在计算基于父视图高度的百分比尺寸时，从父视图的上下两侧各留出的空间。
+        /// - Returns: 一个新的尺寸实例。
+        public static func fractionalHeight(_ fractionalHeight: CGFloat, padding: CGFloat = 0) -> Dimension {
+            Dimension(option: .fractionalHeight(fractionalHeight, padding: padding))
+        }
+
+        /// 创建一个绝对尺寸
+        ///
+        /// - Parameter absoluteDimension: 绝对尺寸值。
+        /// - Returns: 一个新的尺寸实例。
+        public static func absolute(_ absoluteDimension: CGFloat) -> Dimension {
+            Dimension(option: .absolute(absoluteDimension))
+        }
+        
+        /// 根据容器的尺寸解析出实际值
+        func resolvedValue(within containerSize: CGSize) -> CGFloat {
+            var resolvedValue: CGFloat = 0
+            switch option {
+            case let .fractionalWidth(ratio, padding):
+                resolvedValue = (containerSize.width - 2 * padding) * ratio
+            case let .fractionalHeight(ratio, padding):
+                resolvedValue = (containerSize.height - 2 * padding) * ratio
+            case let .absolute(value):
+                resolvedValue = value
+            }
+            
+            return resolvedValue
+        }
+    }
+
+    /// 表示卡片尺寸的结构体，使用 `Dimension` 来定义宽度和高度。
+    public struct CardSize {
+        public var width: Dimension
+        public var height: Dimension
+    }
+    
+    /// 滚动停止时卡片的对齐方式
+    public struct CardAlignment {
+        enum Option {
+            /// 中心对齐，卡片的中心与轮播组件的中心对齐。
+            /// - Parameter offset: 用于设置卡片在滚动方向上的偏移量。
+            case center(offset: CGFloat)
+            
+            /// Leading 对齐，卡片的 Leading 边与轮播组件的 Leading 边对齐。
+            /// - Parameter offset: 用于设置卡片在滚动方向上的偏移量。
+            case leading(offset: CGFloat)
+        }
+
+        var option: Option
+        
+        init(option: Option) {
+            self.option = option
+        }
+        
+        public static let center = CardAlignment(option: .center(offset: 0))
+        
+        public static func center(offset: CGFloat) -> CardAlignment {
+            .init(option: .center(offset: offset))
+        }
+        
+        public static let leading = CardAlignment(option: .leading(offset: 0))
+        
+        public static func leading(offset: CGFloat) -> CardAlignment {
+            .init(option: .leading(offset: offset))
+        }
+    }
+    
+    public enum PagingThreshold {
+        case fractional(CGFloat)
         case absolute(CGFloat)
-    }
-    
-    var options: Options
-    
-    init(options: Options) {
-        self.options = options
-    }
-    
-    public static func fractionalWidth(_ fractionalWidth: CGFloat, inset: CGFloat = 0) -> CardLayoutDimension {
-        CardLayoutDimension(options: .fractionalWidth(fractionalWidth, inset: inset))
-    }
-
-    public static func fractionalHeight(_ fractionalHeight: CGFloat, inset: CGFloat = 0) -> CardLayoutDimension {
-        CardLayoutDimension(options: .fractionalHeight(fractionalHeight, inset: inset))
-    }
-
-    public static func absolute(_ absoluteDimension: CGFloat) -> CardLayoutDimension {
-        CardLayoutDimension(options: .absolute(absoluteDimension))
-    }
-}
-
-public struct CardLayoutSize {
-    public var widthDimension: CardLayoutDimension
-    public var heightDimension: CardLayoutDimension
-    
-    public init(widthDimension: CardLayoutDimension = .fractionalWidth(1), heightDimension: CardLayoutDimension = .fractionalHeight(1)) {
-        self.widthDimension = widthDimension
-        self.heightDimension = heightDimension
-    }
-    
-    func actualValue(withContainerSize size: CGSize) -> CGSize {
-        var width: CGFloat
-        var height: CGFloat
         
-        switch widthDimension.options {
-        case let .fractionalWidth(ratio, inset):
-            width = (size.width - 2 * inset) * ratio
-        case let .fractionalHeight(ratio, inset):
-            width = (size.height - 2 * inset) * ratio
-        case let .absolute(value):
-            width = value
+        func resolvedPagingThreshold(cardDimensionWithSpacing: CGFloat) -> CGFloat {
+            switch self {
+            case .fractional(let value):
+                // 验证 fractional 范围
+                if value < 0 || value >= 1 {
+                    fatalError("Invalid fractional value: \(value). It must be in the range [0, 1).")
+                }
+                return value
+
+            case .absolute(let value):
+                // 验证 absolute 范围
+                if value < 0 || value >= cardDimensionWithSpacing {
+                    fatalError("Invalid absolute value: \(value). It must be in the range [0, \(cardDimensionWithSpacing)).")
+                }
+                return value / cardDimensionWithSpacing
+            }
         }
+    }
+
+    public enum ScrollDirection: Int {
+        case leftToRight = 1
+        case rightToLeft = 2
+        case topToBottom = 3
+        case bottomToTop = 4
         
-        switch heightDimension.options {
-        case let .fractionalWidth(ratio, inset):
-            height = (size.width - 2 * inset) * ratio
-        case let .fractionalHeight(ratio, inset):
-            height = (size.height - 2 * inset) * ratio
-        case let .absolute(value):
-            height = value
+        var isHorizontal: Bool {
+            return self == .leftToRight || self == .rightToLeft
         }
-        
-        return CGSize(width: width, height: height)
-    }
-}
-
-public struct CardScrollStopAlignment {
-    enum Options {
-        case center(offset: CGFloat)
-        /// head 即滚动开始的位置
-        case head(offset: CGFloat)
     }
     
-    var options: Options
-    
-    init(options: Options) {
-        self.options = options
-    }
-    
-    public static let center = CardScrollStopAlignment(options: .center(offset: 0))
-    
-    public static func center(offset: CGFloat) -> CardScrollStopAlignment {
-        .init(options: .center(offset: offset))
-    }
-    
-    public static let head = CardScrollStopAlignment(options: .head(offset: 0))
-    
-    public static func head(offset: CGFloat) -> CardScrollStopAlignment {
-        .init(options: .head(offset: offset))
-    }
-}
-
-public enum CardScrollDirection: Int {
-    case leftToRight = 1
-    case rightToLeft = 2
-    case topToBottom = 3
-    case bottomToTop = 4
-}
-
-public struct CardTransformMode {
-    enum Options {
+    public enum CardTransformStyle {
         case none
-        case liner(rateOfChange: CGFloat, minimumScale: CGFloat, minimumAlpha: CGFloat)
-        case coverflow(rateOfChange: CGFloat, maximumAngle: CGFloat, minimumAlpha: CGFloat)
-        case custom((_ attributes: UICollectionViewLayoutAttributes, _ visibleRect: CGRect) -> Void)
+        case zoom(maxCardScale: CGFloat, inactiveCardAlpha: CGFloat)
     }
     
-    var options: Options
-    
-    init(options: Options) {
-        self.options = options
+    public enum ScrollMode {
+        case automatic(timeInterval: TimeInterval)
+        case manual
     }
     
-    public static let none = CardTransformMode(options: .none)
-    
-    public static let liner = CardTransformMode(options: .liner(rateOfChange: 0.5, minimumScale: 0.8, minimumAlpha: 1))
-    
-    public static func liner(rateOfChange: CGFloat = 0.5, minimumScale: CGFloat = 0.8, minimumAlpha: CGFloat = 1) -> CardTransformMode {
-        .init(options: .liner(rateOfChange: rateOfChange, minimumScale: minimumScale, minimumAlpha: minimumAlpha))
+    public enum LoopMode {
+        case circular   // 环形循环
+        case single     // 滚动到最后就停止
     }
     
-    public static let coverflow = CardTransformMode(options: .coverflow(rateOfChange: 0.5, maximumAngle: 0.2, minimumAlpha: 1))
-    
-    public static func coverflow(rateOfChange: CGFloat = 0.5, maximumAngle: CGFloat = 0.2, minimumAlpha: CGFloat = 1) -> CardTransformMode {
-        .init(options: .coverflow(rateOfChange: rateOfChange, maximumAngle: maximumAngle, minimumAlpha: minimumAlpha))
+    enum SlideDirection {
+        case forward
+        case backward
     }
-    
-    public static func custom(_ transform: @escaping (_ attributes: UICollectionViewLayoutAttributes, _ visibleRect: CGRect) -> Void) -> CardTransformMode {
-        .init(options: .custom(transform))
-    }
-}
-
-public struct PageControlPosition {
-    enum Options {
-        case leftTop
-        case rightTop
-        case leftBottom
-        case rightBottom
-        case centerXTop
-        case centerXBottom
-        case leftCenterY
-        case rightCenterY
-    }
-    
-    var options: Options
-    
-    var offset: CGPoint
-    
-    init(options: Options, offset: CGPoint) {
-        self.options = options
-        self.offset = offset
-    }
-    
-    public static let leftTop = PageControlPosition(options: .leftTop, offset: .zero)
-    
-    public static func leftTop(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .leftTop, offset: offset)
-    }
-    
-    public static let rightTop = PageControlPosition(options: .rightTop, offset: .zero)
-    
-    public static func rightTop(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .rightTop, offset: offset)
-    }
-    
-    public static let leftBottom = PageControlPosition(options: .leftBottom, offset: .zero)
-    
-    public static func leftBottom(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .leftBottom, offset: offset)
-    }
-    
-    public static let rightBottom = PageControlPosition(options: .rightBottom, offset: .zero)
-    
-    public static func rightBottom(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .rightBottom, offset: offset)
-    }
-    
-    public static let centerXTop = PageControlPosition(options: .centerXTop, offset: .zero)
-    
-    public static func centerXTop(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .centerXTop, offset: offset)
-    }
-    
-    public static let centerXBottom = PageControlPosition(options: .centerXBottom, offset: .zero)
-    
-    public static func centerXBottom(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .centerXBottom, offset: offset)
-    }
-    
-    public static let leftCenterY = PageControlPosition(options: .leftCenterY, offset: .zero)
-    
-    public static func leftCenterY(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .leftCenterY, offset: offset)
-    }
-    
-    public static let rightCenterY = PageControlPosition(options: .rightCenterY, offset: .zero)
-    
-    public static func rightCenterY(offset: CGPoint) -> PageControlPosition {
-        PageControlPosition(options: .rightCenterY, offset: offset)
-    }
-}
-
-public enum CardLoopMode {
-    case circular   // 环形循环
-    case rollback   // 快速回滚
-    case single     // 滚动到最后就停止
-}
-
-public enum CardScrollMode {
-    case automatic(timeInterval: TimeInterval)
-    case manual
-}
-
-public enum CardPagingThreshold {
-    case fractional(CGFloat)
-    case absolute(CGFloat)
-}
-
-enum SlideDirection {
-    case forward
-    case backward
 }
