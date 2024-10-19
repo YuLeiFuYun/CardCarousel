@@ -2,7 +2,7 @@
 //  CardCarouselDataSource.swift
 //  CardCarousel
 //
-//  Created by mac on 2024/10/15.
+//  Created by 玉垒浮云 on 2024/10/15.
 //
 
 import UIKit
